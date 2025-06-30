@@ -3,59 +3,138 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Jio Incentive Calculator</title>
+  <title>Incentive Calculator for Retailer</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       padding: 20px;
-      max-width: 400px;
       margin: auto;
       background-color: #f2f2f2;
+      max-width: 600px;
     }
-    h2 { color: #d9272e; }
-    label { display: block; margin: 10px 0 5px; }
-    input[type="number"] {
-      width: 100%; padding: 8px; font-size: 16px;
+
+    .container {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     }
+
+    img.logo {
+      display: block;
+      margin: 0 auto 20px auto;
+      width: 150px;
+    }
+
+    h2 {
+      color: #d9272e;
+      text-align: center;
+    }
+
+    label {
+      display: block;
+      margin: 15px 0 5px;
+    }
+
+    input[type="number"], select {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      box-sizing: border-box;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+
     button {
       margin-top: 20px;
-      width: 100%; padding: 10px;
-      background-color: #d9272e; color: white; font-size: 16px;
-      border: none; border-radius: 4px;
+      width: 100%;
+      padding: 12px;
+      background-color: #d9272e;
+      color: white;
+      font-size: 16px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
     }
-    #result {
-      margin-top: 20px;
-      font-weight: bold;
-      font-size: 18px;
+
+    button:hover {
+      background-color: #bb1f25;
+    }
+
+    .result {
+      margin-top: 25px;
+      font-size: 16px;
+      background: #eef2f3;
+      padding: 15px;
+      border-radius: 6px;
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 10px;
+      }
+
+      input, select, button {
+        font-size: 15px;
+      }
     }
   </style>
 </head>
 <body>
 
-  <h2>Jio Incentive Calculator</h2>
+  <div class="container">
+    <img class="logo" src="https://upload.wikimedia.org/wikipedia/en/3/3e/Jio_Logo.png" alt="Jio Logo">
+    <h2>Incentive Calculator for Retailer</h2>
 
-  <label for="sim">New SIM Sold</label>
-  <input type="number" id="sim" placeholder="Enter SIM count">
+    <label for="retailerType">Retailer Type</label>
+    <select id="retailerType">
+      <option value="jpr">JPR</option>
+      <option value="non-jpr">Non-JPR</option>
+    </select>
 
-  <label for="mnp">MNP Count</label>
-  <input type="number" id="mnp" placeholder="Enter MNP count">
+    <label for="sim">New SIM Activations</label>
+    <input type="number" id="sim" placeholder="Enter SIM count">
 
-  <label for="airfiber">AirFiber Bookings</label>
-  <input type="number" id="airfiber" placeholder="Enter AirFiber count">
+    <label for="mnp">MNP Activations</label>
+    <input type="number" id="mnp" placeholder="Enter MNP count">
 
-  <button onclick="calculate()">Calculate Incentive</button>
+    <label for="airfiber">JAF (AirFiber) Bookings</label>
+    <input type="number" id="airfiber" placeholder="Enter AirFiber count">
 
-  <div id="result"></div>
+    <button onclick="calculate()">Calculate Incentive</button>
+
+    <div class="result" id="result" style="display:none;"></div>
+  </div>
 
   <script>
     function calculate() {
       const sim = Number(document.getElementById('sim').value) || 0;
       const mnp = Number(document.getElementById('mnp').value) || 0;
       const airfiber = Number(document.getElementById('airfiber').value) || 0;
+      const retailerType = document.getElementById('retailerType').value;
 
-      const incentive = sim * 10 + mnp * 20 + airfiber * 100;
+      // Example incentive logic (can be customized by retailer type if needed)
+      const simRate = 10;
+      const mnpRate = 20;
+      const airfiberRate = 100;
 
-      document.getElementById('result').innerText = "Total Incentive: ₹" + incentive;
+      const simIncentive = sim * simRate;
+      const mnpIncentive = mnp * mnpRate;
+      const airfiberIncentive = airfiber * airfiberRate;
+      const total = simIncentive + mnpIncentive + airfiberIncentive;
+
+      const resultHTML = `
+        <strong>Retailer Type:</strong> ${retailerType.toUpperCase()}<br>
+        <strong>SIM Incentive:</strong> ₹${simIncentive}<br>
+        <strong>MNP Incentive:</strong> ₹${mnpIncentive}<br>
+        <strong>JAF Incentive:</strong> ₹${airfiberIncentive}<br>
+        <hr>
+        <strong>Total Incentive:</strong> ₹${total}
+      `;
+
+      const resultDiv = document.getElementById('result');
+      resultDiv.innerHTML = resultHTML;
+      resultDiv.style.display = 'block';
     }
   </script>
 
