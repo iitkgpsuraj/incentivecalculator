@@ -69,13 +69,19 @@
       border-radius: 6px;
     }
 
-    @media (max-width: 600px) {
-      body {
-        padding: 10px;
-      }
+    .sim-group {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
 
-      input, select, button {
-        font-size: 15px;
+    .sim-group select, .sim-group input {
+      flex: 1;
+    }
+
+    @media (max-width: 600px) {
+      .sim-group {
+        flex-direction: column;
       }
     }
   </style>
@@ -92,14 +98,62 @@
       <option value="non-jpr">Non-JPR</option>
     </select>
 
-    <label for="sim">New SIM Activations</label>
-    <input type="number" id="sim" placeholder="Enter SIM count">
+    <h3>SIM Activation Details</h3>
+    <div class="sim-group">
+      <select class="sim-plan">
+        <option value="">Select Plan</option>
+        <option value="299">₹299</option>
+        <option value="349">₹349</option>
+        <option value="399">₹399</option>
+      </select>
+      <input type="number" class="sim-qty" placeholder="Qty" min="0" value="0">
+    </div>
+    <div class="sim-group">
+      <select class="sim-plan">
+        <option value="">Select Plan</option>
+        <option value="299">₹299</option>
+        <option value="349">₹349</option>
+        <option value="399">₹399</option>
+      </select>
+      <input type="number" class="sim-qty" placeholder="Qty" min="0" value="0">
+    </div>
+    <div class="sim-group">
+      <select class="sim-plan">
+        <option value="">Select Plan</option>
+        <option value="299">₹299</option>
+        <option value="349">₹349</option>
+        <option value="399">₹399</option>
+      </select>
+      <input type="number" class="sim-qty" placeholder="Qty" min="0" value="0">
+    </div>
 
-    <label for="mnp">MNP Activations</label>
-    <input type="number" id="mnp" placeholder="Enter MNP count">
+    <h3>MNP Activation Details</h3>
+    <div class="sim-group">
+      <select class="mnp-plan">
+        <option value="">Select Plan</option>
+        <option value="299">₹299</option>
+        <option value="349">₹349</option>
+      </select>
+      <input type="number" class="mnp-qty" placeholder="Qty" min="0" value="0">
+    </div>
+    <div class="sim-group">
+      <select class="mnp-plan">
+        <option value="">Select Plan</option>
+        <option value="299">₹299</option>
+        <option value="349">₹349</option>
+      </select>
+      <input type="number" class="mnp-qty" placeholder="Qty" min="0" value="0">
+    </div>
 
-    <label for="airfiber">JAF (AirFiber) Bookings</label>
-    <input type="number" id="airfiber" placeholder="Enter AirFiber count">
+    <h3>JAF (AirFiber) Booking</h3>
+    <label for="af1111">Booking ₹1111</label>
+    <input type="number" id="af1111" min="0" value="0">
+
+    <label for="af2222">Booking ₹2222</label>
+    <input type="number" id="af2222" min="0" value="0">
+
+    <label for="afUnlimited">Unlimited Offer Booking</label>
+    <input type="number" id="afUnlimited" min="0" value="0">
 
     <button onclick="calculate()">Calculate Incentive</button>
 
@@ -107,29 +161,87 @@
   </div>
 
   <script>
+    function getSimRate(plan) {
+      if (plan === "299") return 122.45;
+      if (plan === "349") return 132.65;
+      if (plan === "399") return 137.76;
+      return 0;
+    }
+
+    function getMnpRate(plan) {
+      if (plan === "299") return 209;
+      if (plan === "349") return 234;
+      return 0;
+    }
+
+    function isValidQty(value) {
+      return /^\d+$/.test(value);
+    }
+
     function calculate() {
-      const sim = Number(document.getElementById('sim').value) || 0;
-      const mnp = Number(document.getElementById('mnp').value) || 0;
-      const airfiber = Number(document.getElementById('airfiber').value) || 0;
       const retailerType = document.getElementById('retailerType').value;
 
-      // Example incentive logic (can be customized by retailer type if needed)
-      const simRate = 10;
-      const mnpRate = 20;
-      const airfiberRate = 100;
+      let simIncentive = 0;
+      let mnpIncentive = 0;
+      let airfiberIncentive = 0;
 
-      const simIncentive = sim * simRate;
-      const mnpIncentive = mnp * mnpRate;
-      const airfiberIncentive = airfiber * airfiberRate;
+      // SIM Activations
+      const simPlans = document.querySelectorAll('.sim-plan');
+      const simQtys = document.querySelectorAll('.sim-qty');
+      for (let i = 0; i < simPlans.length; i++) {
+        const plan = simPlans[i].value;
+        const qtyVal = simQtys[i].value.trim();
+        if (!isValidQty(qtyVal)) {
+          alert("Enter valid non-negative integer for SIM quantity.");
+          return;
+        }
+        const qty = parseInt(qtyVal);
+        simIncentive += getSimRate(plan) * qty;
+      }
+
+      // MNP Activations
+      const mnpPlans = document.querySelectorAll('.mnp-plan');
+      const mnpQtys = document.querySelectorAll('.mnp-qty');
+      for (let i = 0; i < mnpPlans.length; i++) {
+        const plan = mnpPlans[i].value;
+        const qtyVal = mnpQtys[i].value.trim();
+        if (!isValidQty(qtyVal)) {
+          alert("Enter valid non-negative integer for MNP quantity.");
+          return;
+        }
+        const qty = parseInt(qtyVal);
+        mnpIncentive += getMnpRate(plan) * qty;
+      }
+
+      // AirFiber Bookings
+      const af1111 = document.getElementById('af1111').value.trim();
+      const af2222 = document.getElementById('af2222').value.trim();
+      const afUnlimited = document.getElementById('afUnlimited').value.trim();
+
+      if (!isValidQty(af1111) || !isValidQty(af2222) || !isValidQty(afUnlimited)) {
+        alert("Enter valid non-negative integers for AirFiber bookings.");
+        return;
+      }
+
+      const qty1111 = parseInt(af1111);
+      const qty2222 = parseInt(af2222);
+      const qtyUnlimited = parseInt(afUnlimited);
+
+      const afRate1111 = 96;
+      const afRate2222 = retailerType === "jpr" ? 200 : 96;
+      const afRateUnlimited = 120;
+
+      airfiberIncentive = (qty1111 * afRate1111) + (qty2222 * afRate2222) + (qtyUnlimited * afRateUnlimited);
+
       const total = simIncentive + mnpIncentive + airfiberIncentive;
 
       const resultHTML = `
         <strong>Retailer Type:</strong> ${retailerType.toUpperCase()}<br>
-        <strong>SIM Incentive:</strong> ₹${simIncentive}<br>
-        <strong>MNP Incentive:</strong> ₹${mnpIncentive}<br>
-        <strong>JAF Incentive:</strong> ₹${airfiberIncentive}<br>
+        <strong>SIM Incentive:</strong> ₹${simIncentive.toFixed(2)}<br>
+        <strong>MNP Incentive:</strong> ₹${mnpIncentive.toFixed(2)}<br>
+        <strong>JAF Incentive:</strong> ₹${airfiberIncentive.toFixed(2)}<br>
         <hr>
-        <strong>Total Incentive:</strong> ₹${total}
+        <strong>Total Incentive:</strong> ₹${total.toFixed(2)}
       `;
 
       const resultDiv = document.getElementById('result');
