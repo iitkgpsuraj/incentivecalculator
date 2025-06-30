@@ -71,6 +71,7 @@
 
     .sim-group {
       display: flex;
+      align-items: center;
       gap: 10px;
       margin-bottom: 10px;
     }
@@ -79,9 +80,24 @@
       flex: 1;
     }
 
+    .section-title {
+      font-weight: bold;
+      margin: 20px 0 10px;
+      font-size: 18px;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 4px;
+    }
+
     @media (max-width: 600px) {
       .sim-group {
-        flex-direction: column;
+        flex-direction: row;
+        gap: 10px;
+      }
+
+      .sim-group select,
+      .sim-group input {
+        flex: 1 1 50%;
+        font-size: 15px;
       }
     }
   </style>
@@ -98,7 +114,7 @@
       <option value="non-jpr">Non-JPR</option>
     </select>
 
-    <h3>SIM Activation Details</h3>
+    <h3 class="section-title">SIM Activation</h3>
     <div class="sim-group">
       <select class="sim-plan">
         <option value="">Select Plan</option>
@@ -127,7 +143,7 @@
       <input type="number" class="sim-qty" placeholder="Qty" min="0" value="0">
     </div>
 
-    <h3>MNP Activation Details</h3>
+    <h3 class="section-title">MNP Activation</h3>
     <div class="sim-group">
       <select class="mnp-plan">
         <option value="">Select Plan</option>
@@ -145,15 +161,19 @@
       <input type="number" class="mnp-qty" placeholder="Qty" min="0" value="0">
     </div>
 
-    <h3>JAF (AirFiber) Booking</h3>
-    <label for="af1111">Booking ₹1111</label>
-    <input type="number" id="af1111" min="0" value="0">
-
-    <label for="af2222">Booking ₹2222</label>
-    <input type="number" id="af2222" min="0" value="0">
-
-    <label for="afUnlimited">Unlimited Offer Booking</label>
-    <input type="number" id="afUnlimited" min="0" value="0">
+    <h3 class="section-title">JAF (AirFiber) Booking</h3>
+    <div class="sim-group">
+      <label>₹1111 Booking</label>
+      <input type="number" id="af1111" min="0" value="0">
+    </div>
+    <div class="sim-group">
+      <label>₹2222 Booking</label>
+      <input type="number" id="af2222" min="0" value="0">
+    </div>
+    <div class="sim-group">
+      <label>Unlimited Offer Booking</label>
+      <input type="number" id="afUnlimited" min="0" value="0">
+    </div>
 
     <button onclick="calculate()">Calculate Incentive</button>
 
